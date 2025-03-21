@@ -1,3 +1,7 @@
 # Files
 
 .DS_Store
+
+*venv/
+*.pyc
+__pycache__/

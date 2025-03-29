@@ -18,7 +18,6 @@ def fetch_billboard_data(date="2024-05-11", range="1-10"):
 
     if response.status_code == 200:
         data = response.json()
-        print(data)
         # parse JSON into DataFrame
         content = data.get("content", {})
         if isinstance(content, dict):

@@ -5,3 +5,7 @@
 *venv/
 *.pyc
 __pycache__/
+
+.cache
+
+data/

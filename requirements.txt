@@ -12,6 +12,7 @@ dill==0.3.9
 fonttools==4.56.0
 idna==3.10
 isort==6.0.1
+joblib==1.4.2
 kiwisolver==1.4.8
 matplotlib==3.10.1
 mccabe==0.7.0
@@ -30,10 +31,13 @@ pytz==2025.1
 redis==5.2.1
 requests==2.32.3
 ruff==0.11.2
+scikit-learn==1.6.1
+scipy==1.15.2
 seaborn==0.13.2
 six==1.17.0
 soupsieve==2.6
 spotipy==2.25.1
+threadpoolctl==3.6.0
 tomlkit==0.13.2
 typing_extensions==4.12.2
 tzdata==2025.1

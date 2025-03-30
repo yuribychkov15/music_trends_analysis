@@ -29,6 +29,37 @@ def analyze_genre_trends(df):
     pivot_df = pivot_df.fillna(0)
     return pivot_df
 
+def analyze_merged_data():
+    """ 
+        Analyze and visualize the merged Spotify and Billboard data
+    """
+    try:
+        merged_df = pd.read_csv('data/processed/merged_data.csv')
+
+        # visualize correlation between chart position and popularity
+        plt.figure(figsize=(10, 6))
+        plt.scatter(merged_df['rank'], merged_df['popularity'], alpha=0.6)
+        plt.xlabel('Billboard Chart Position')
+        plt.ylabel('Spotify Popularity Score')
+        plt.title('Relationship Between Chart Position and Popularity')
+        plt.gca().invert_xaxis() # invert so #1 on right side
+        plt.savefig('visualizations/chart_vs_popularity.png')
+
+        # visualize weeks on chart by popularity
+        plt.figure(figsize=(10, 6))
+        plt.scatter(merged_df['weeks_on_chart'], merged_df['popularity'], alpha=0.6)
+        plt.xlabel('Weeks on Chart')
+        plt.ylabel('Spotify Popularity Score')
+        plt.title('Relationship Between Longevity and Popularity')
+        plt.savefig('visualizations/longevity_vs_popularity.png')
+
+        return merged_df
+    except FileNotFoundError:
+        print("Merged data file not found. Please run data_processing.py first")
+        return None
+
+
+
 def plot_genre_trends(genre_pivot_df):
     """
         Visualize genre trends over time
@@ -59,3 +90,9 @@ if __name__ == "__main__":
     plot_genre_trends(genre_pivot)
 
     print("Genre visualizations complete!")
+
+    # analyze merged data
+    print("\nAnalyzing merged Spotify and Billboard data...")
+    merged_df = analyze_merged_data()
+    if merged_df is not None:
+        print("Merged data visualizations complete!")

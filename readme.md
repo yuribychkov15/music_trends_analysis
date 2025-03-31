@@ -1,6 +1,6 @@
 ## Clone the repository ##
 
-https://github.com/yuribychkov15/cs506#
+[https://github.com/yuribychkov15/cs506#]
 
 ## Create and activate virtual enviornment ##
 

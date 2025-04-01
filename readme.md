@@ -83,11 +83,28 @@ Evaluate performance using error metrics such as RMSE (Root Mean Squared Error) 
   **2. Random Forest Regressor:** A more complex ensemble method to capture non-linear patterns
   
   -  Benefits: able to handle nonlinearity, mitigates overfitting, less sensitive to outliers/noise
+
+![image](https://github.com/user-attachments/assets/282ea1df-6671-48f5-9ded-79ffd5d27e6b)
+- Actual probability vs. predicted probability using random forests
   
-## Preliminary Results
-![image](https://github.com/user-attachments/assets/adae74c4-e47d-490b-90b6-0c942d960195)
+![image](https://github.com/user-attachments/assets/b4f9905f-1535-4ad4-a193-abcd9af888d2)
+- Demonstrates which extracted features were most important in predicting a song's popularity in order of most to least important
 
+  
+## Preliminary Results and Visualization
+![image](https://github.com/user-attachments/assets/d8c8fe7d-90c0-4bcb-aa46-a848fe025978)
+- Shows relationship between popularity over time and release dates
 
-## Key Insights
+![image](https://github.com/user-attachments/assets/14be84aa-9e54-4e30-aa6a-e566f4c8538b)
+- Top 10 current artists on Spotify and their average popularity
 
-## Future Plans
+## Challenges and Future Plans
+**Challenges**
+- Aligning track titles between Spotify and Billboard when merging data due to naming conventions, addressed by standardizing the formatting in preprocessing
+- Many older Billboard charts have missing information for some records, we can remedy this by filtering out these entries or reducing data to only include entries past a certain date where it can be verified that all records are complete
+
+**Future Plans**
+- Refining our models with additional algorithms, like ARIMA for time-series forecasting or neural networks for modeling more complex patterns
+- Incorporate other metrics of popularity like social media mentions or playlist inclusions
+- Analyze more audio features beyond track statistics such as genre, BPM, and valence
+- Create interactive dashboards using tools like Plotly or Dash for accessibility

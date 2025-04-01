@@ -1,3 +1,5 @@
+**Midterm Report Video Link:** https://youtu.be/NjSm3KxVdu0
+
 # How to Run:
 ## Clone the repository ##
 

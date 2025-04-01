@@ -36,22 +36,25 @@ def analyze_merged_data():
     try:
         merged_df = pd.read_csv('data/processed/merged_data.csv')
 
-        # visualize correlation between chart position and popularity
-        plt.figure(figsize=(10, 6))
-        plt.scatter(merged_df['rank'], merged_df['popularity'], alpha=0.6)
-        plt.xlabel('Billboard Chart Position')
-        plt.ylabel('Spotify Popularity Score')
-        plt.title('Relationship Between Chart Position and Popularity')
-        plt.gca().invert_xaxis() # invert so #1 on right side
-        plt.savefig('visualizations/chart_vs_popularity.png')
+        # temportal popularity trends
+        plt.figure(figsize=(12, 12))
+        sns.lineplot(data=merged_df, x='release_date', y='popularity')
+        plt.title('Spotify Popularity Trend Over Time')
+        plt.xticks(rotation=45)
+        plt.savefig('visualizations/popularity_trend.png')
 
-        # visualize weeks on chart by popularity
+        # top artists analysis
+        plt.figure(figsize=(16, 16))
+        merged_df.groupby('artist')['popularity'].mean().nlargest(10).plot(kind="barh")
+        plt.title('Top 10 Artists By Average Popularity')
+        plt.xlabel('Average Popularity Score')
+        plt.savefig('visualizations/top_artists.png')
+
+        # enhanced scatter plot with regression line
         plt.figure(figsize=(10, 6))
-        plt.scatter(merged_df['weeks_on_chart'], merged_df['popularity'], alpha=0.6)
-        plt.xlabel('Weeks on Chart')
-        plt.ylabel('Spotify Popularity Score')
-        plt.title('Relationship Between Longevity and Popularity')
-        plt.savefig('visualizations/longevity_vs_popularity.png')
+        sns.regplot(x='this_week', y='popularity', data=merged_df, scatter_kws={'alpha':0.4})
+        plt.title('Chart Position vs Streaming Popularity')
+        plt.savefig('visualizations/chart_vs_popularity.png')
 
         return merged_df
     except FileNotFoundError:

@@ -4,7 +4,7 @@ import requests
 import configparser
 from bs4 import BeautifulSoup
 import pandas as pd
-from billboard_api import fetch_billboard_data
+from billboard_api import fetch_billboard_data_bulk, fetch_billboard_data
 
 # Spotify API setup
 # load from config
@@ -27,16 +27,17 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 #     print(f"{track['name']} by {track['artists'][0]['name']}")
 
 def fetch_spotify_data():
-    results = sp.search(q="year:2023", type="track", limit=50)
     tracks = []
-    for item in results["tracks"]["items"]:
-        tracks.append({
-            "track_name": item["name"],
-            "artist": item["artists"][0]["name"],
-            "release_date": item["album"]["release_date"],
-            "popularity": item["popularity"],
-            "duration_ms": item["duration_ms"]
-        })
+    for offset in range(0, 1000, 50): # fetch up to 200 tracks in batches of 50
+        results = sp.search(q="year:2024", type="track", limit=50, offset=offset)
+        for item in results["tracks"]["items"]:
+            tracks.append({
+                "track_name": item["name"],
+                "artist": item["artists"][0]["name"],
+                "release_date": item["album"]["release_date"],
+                "popularity": item["popularity"],
+                "duration_ms": item["duration_ms"]
+            })
     return pd.DataFrame(tracks)
 
 if __name__ == "__main__":
@@ -48,8 +49,11 @@ if __name__ == "__main__":
     spotify_df.to_csv("data/raw/spotify_recently_played.csv", index=False)
 
     # Fetch Billboard data
-    billboard_df = fetch_billboard_data(date="2025-03-22", range="1-10")
-    print("Billboard Data:")
-    print(billboard_df)
-
-    billboard_df.to_csv("data/raw/billboard_hot_100.csv", index=False)
+    # Billboard Collection (2024 full year)
+    print("\nFetching Billboard data...")
+    billboard_df = fetch_billboard_data_bulk("2024-01-06", "2024-12-28")  # Saturdays only
+    if not billboard_df.empty:
+        billboard_df.to_csv("data/raw/billboard_hot_100_2024.csv", index=False)
+        print(f"Saved {len(billboard_df)} Billboard chart entries")
+    else:
+        print("No Billboard data collected")

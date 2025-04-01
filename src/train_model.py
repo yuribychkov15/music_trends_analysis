@@ -21,12 +21,18 @@ def train_popularity_prediction_model(df):
         Train a model to predict popularity based on available features
     """
     # select features and target
-    features = ['duration_ms', 'weeks_on_chart', 'peak_position']
-    X = df[features]
-    y = df['popularity'] # Spotify popularity score
+    df['release_date'] = pd.to_datetime(df['release_date'])
+
+    # temporal split (80% trainm, 20% test)
+    cutoff = df['release_date'].quantile(0.8)
+    train = df[df['release_date'] <= cutoff]
+    test = df[df['release_date'] > cutoff]
+
+    features = ['duration_ms', 'weeks_on_chart', 'peak_position', 'days_since_release']
 
     # Temporal split (80% train, 20% test)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test = train[features], test[features]
+    y_train, y_test = train['popularity'], test['popularity']
 
     # train linear regression model
     linear_model = LinearRegression()

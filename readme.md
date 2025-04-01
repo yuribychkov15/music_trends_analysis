@@ -77,9 +77,11 @@ Evaluate performance using error metrics such as RMSE (Root Mean Squared Error) 
   Models used:
   
   **1. Linear Regression:** A baseline approach establishing fundamental relationships between features and popularity
+  
     - Benefits: computationally efficient, interpretable results show clear correlation if such a relationship exists
     
   **2. Random Forest Regressor:** A more complex ensemble method to capture non-linear patterns
+  
     - Benefits: able to handle nonlinearity, mitigates overfitting, less sensitive to outliers/noise
   
 ## Preliminary Results

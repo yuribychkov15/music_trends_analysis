@@ -1,3 +1,4 @@
+# How to Run:
 ## Clone the repository ##
 
 [https://github.com/yuribychkov15/cs506#]
@@ -55,3 +56,32 @@ Scrape Billboard charts using Python libraries such as requests and BeautifulSou
 Temporally split the data (e.g., train on data until a certain month and test on data from the subsequent month).
 Reserve the last 20% of the time-series data as a holdout test set.
 Evaluate performance using error metrics such as RMSE (Root Mean Squared Error) and MAE (Mean Absolute Error).
+
+# Midterm Report
+
+## Data Collection
+
+  - **Spotipy (Spotify API):** extracted track details including artist names, track titles, release dates, popularity scores, and duration metrics
+  - **Billboard API:** collected Hot 100 chart data featuring ranking information, artist names, song titles, and chart performance metrics like peak position and number of weeks on chart 
+
+## Data Processing
+  **Step-by-step breakdown:**
+  - Converting date fields to proper date/time format
+  - Extracting temporal features (year and month)
+  - Handling missing values in the weeks_on_chart column
+  - Removing duplicate entries based on title and artist combinations
+  - Merging Spotify and Billboard datasets using artist names as the joining field
+
+## Model Selection and Training
+  **Goal:** Predict song popularity based on various features extracted from APIs
+  Models used:
+  **1. Linear Regression:** A baseline approach establishing fundamental relationships between features and popularity
+    - Benefits: computationally efficient, interpretable results show clear correlation if such a relationship exists
+  **2. Random Forest Regressor:** A more complex ensemble method to capture non-linear patterns
+    - Benefits: able to handle nonlinearity, mitigates overfitting, less sensitive to outliers/noise
+  
+## Preliminary Results
+
+## Key Insights
+
+## Future Plans

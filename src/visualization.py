@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
 
 def load_external_spotify_data():
     """
@@ -25,8 +26,7 @@ def analyze_genre_trends(df):
     # filter for top genres only
     top_genre_trends = genre_by_year[genre_by_year['top genre'].isin(top_genres)]
     # pivot data (visualization)
-    pivot_df = top_genre_trends.pivot(index='year released', columns='top genre', values='count')
-    pivot_df = pivot_df.fillna(0)
+    pivot_df = top_genre_trends.pivot(index='year released', columns='top genre', values='count').fillna(0)
     return pivot_df
 
 def analyze_merged_data():
@@ -37,24 +37,57 @@ def analyze_merged_data():
         merged_df = pd.read_csv('data/processed/merged_data.csv')
 
         # temportal popularity trends
-        plt.figure(figsize=(12, 12))
-        sns.lineplot(data=merged_df, x='release_date', y='popularity')
+        merged_df['release_quarter'] = pd.to_datetime(merged_df['release_date']).dt.to_period('Q').astype(str)
+        quarterly_avg = merged_df.groupby('release_quarter')['popularity'].mean().reset_index()
+        plt.figure(figsize=(12, 6))
+        sns.lineplot(data=quarterly_avg, x='release_quarter', y='popularity')
         plt.title('Spotify Popularity Trend Over Time')
         plt.xticks(rotation=45)
+        plt.tight_layout()
         plt.savefig('visualizations/popularity_trend.png')
 
-        # top artists analysis
-        plt.figure(figsize=(16, 16))
+        # top 10 artists by avg popularity
+        plt.figure(figsize=(12, 8))
         merged_df.groupby('artist')['popularity'].mean().nlargest(10).plot(kind="barh")
         plt.title('Top 10 Artists By Average Popularity')
         plt.xlabel('Average Popularity Score')
+        plt.tight_layout()
         plt.savefig('visualizations/top_artists.png')
 
-        # enhanced scatter plot with regression line
+        # scatter plot: success tier vs popularity
         plt.figure(figsize=(10, 6))
-        sns.regplot(x='this_week', y='popularity', data=merged_df, scatter_kws={'alpha':0.4})
-        plt.title('Chart Position vs Streaming Popularity')
-        plt.savefig('visualizations/chart_vs_popularity.png')
+        sns.scatterplot(data=merged_df, x='days_since_release', y='popularity', hue='success_tier', alpha=0.6)
+        plt.title('Popularity vs Days Since Release by Success Tier')
+        plt.tight_layout()
+        plt.savefig('visualizations/scatter_success_tier.png')
+
+        # correlation heatmap
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(merged_df[['popularity', 'duration_ms', 'days_since_release', 'rank', 'peak_position']].dropna().corr(), 
+                    annot=True, cmap='coolwarm', fmt='.2f')
+        plt.title('Feature Correlation Heatmap')
+        plt.tight_layout()
+        plt.savefig('visualizations/correlation_heatmap.png')
+
+        # histograms of selected features
+        for col in ['popularity', 'duration_ms', 'days_since_release']:
+            plt.figure(figsize=(8, 4))
+            sns.histplot(merged_df[col], kde=True, bins=30)
+            plt.title(f'Distribution of {col}')
+            plt.tight_layout()
+            plt.savefig(f'visualizations/hist_{col}.png')
+
+        # interactive 3D Plotly visualization
+        fig = px.scatter_3d(
+            merged_df,
+            x='duration_ms',
+            y='days_since_release',
+            z='popularity',
+            color='success_tier',
+            hover_data=['artist', 'title', 'release_date'],
+            title="3D Scatter: Duration vs Days Since Release vs Popularity"
+        )
+        fig.write_html('visualizations/3d_scatter.html')
 
         return merged_df
     except FileNotFoundError:

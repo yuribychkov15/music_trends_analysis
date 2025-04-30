@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor, HistGradientBoostingRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 import math
 
@@ -34,36 +34,41 @@ def train_popularity_prediction_model(df):
     X_train, X_test = train[features], test[features]
     y_train, y_test = train['popularity'], test['popularity']
 
-    # train linear regression model
+
+    results = {}
+
+    # linear regression
     linear_model = LinearRegression()
     linear_model.fit(X_train, y_train)
-    # train random forest model
-    rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
-    rf_model.fit(X_train, y_train)
-    # evaulate models
     linear_pred = linear_model.predict(X_test)
-    rf_pred = rf_model.predict(X_test)
-
-    linear_rmse = math.sqrt(mean_squared_error(y_test, linear_pred))
-    linear_mae = mean_absolute_error(y_test, linear_pred)
-
-    rf_rmse = math.sqrt(mean_squared_error(y_test, rf_pred))
-    rf_mae = mean_absolute_error(y_test, rf_pred)
-
-    results = {
-        'linear_model': {
-            'model': linear_model,
-            'rmse': linear_rmse,
-            'mae': linear_mae
-        },
-        'random_forest': {
-            'model': rf_model,
-            'rmse': rf_rmse,
-            'mae': rf_mae
-        }
+    results['linear_model'] = {
+        'model': linear_model,
+        'rmse': math.sqrt(mean_squared_error(y_test, linear_pred)),
+        'mae': mean_absolute_error(y_test, linear_pred)
     }
 
-    # visualize results
+    # random forest
+    rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+    rf_model.fit(X_train, y_train)
+    rf_pred = rf_model.predict(X_test)
+    results['random_forest'] = {
+        'model': rf_model,
+        'rmse': math.sqrt(mean_squared_error(y_test, rf_pred)),
+        'mae': mean_absolute_error(y_test, rf_pred)
+    }
+
+    # HistGradientBoosting
+    hgb_model = HistGradientBoostingRegressor()
+    hgb_model.fit(X_train, y_train)
+    hgb_pred = hgb_model.predict(X_test)
+    results['hist_gradient_boosting'] = {
+        'model': hgb_model,
+        'rmse': math.sqrt(mean_squared_error(y_test, hgb_pred)),
+        'mae': mean_absolute_error(y_test, hgb_pred)
+    }
+
+
+    # visualize results, scatter: actual vs. predicted (random forest)
     plt.figure(figsize=(10, 6))
     plt.scatter(y_test, rf_pred, alpha=0.5)
     plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], 'r--')
@@ -90,5 +95,5 @@ if __name__ == "__main__":
     df = load_data()
     if df is not None:
         results = train_popularity_prediction_model(df)
-        print("Linear Regression - RMSE:", results['linear_model']['rmse'])
-        print("Random Forest - RMSE:", results['random_forest']['rmse'])
+        for name, res in results.items():
+            print(f"{name.replace('_', ' ').title()} - RMSE: {res['rmse']:.2f} | MAE: {res['mae']:.2f}")

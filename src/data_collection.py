@@ -26,34 +26,48 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 #     track = item['track']
 #     print(f"{track['name']} by {track['artists'][0]['name']}")
 
-def fetch_spotify_data():
-    tracks = []
-    for offset in range(0, 1000, 50): # fetch up to 200 tracks in batches of 50
-        results = sp.search(q="year:2024", type="track", limit=50, offset=offset)
-        for item in results["tracks"]["items"]:
-            tracks.append({
-                "track_name": item["name"],
-                "artist": item["artists"][0]["name"],
-                "release_date": item["album"]["release_date"],
-                "popularity": item["popularity"],
-                "duration_ms": item["duration_ms"]
-            })
-    return pd.DataFrame(tracks)
+def fetch_spotify_data_from_billboard(billboard_df):
+    records = []
+    seen = set()
+
+    for _, row in billboard_df.iterrows():
+        title = row['title']
+        artist = row['artist']
+        key = (title.lower(), artist.lower())
+
+        if key in seen:
+            continue
+        seen.add(key)
+
+        query = f"track:{title} artist:{artist}"
+        try:
+            results = sp.search(q=query, type='track', limit=1)
+            items = results['tracks']['items']
+            if items:
+                track = items[0]
+                records.append({
+                    "track_name": track['name'],
+                    "artist": track['artists'][0]['name'],
+                    "release_date": track['album']['release_date'],
+                    "popularity": track['popularity'],
+                    "duration_ms": track['duration_ms'],
+                    "spotify_id": track['id']
+                })
+                print(f"Found: {track['name']} by {track['artists'][0]['name']}")
+            else:
+                print(f"Not found: {title} by {artist}")
+        except Exception as e:
+            print(f"Error for {title} by {artist}: {e}")
+    return pd.DataFrame(records)
 
 if __name__ == "__main__":
     # Fetch Spotify data
-    spotify_df = fetch_spotify_data()
-    print("Spotify Data:")
-    print(spotify_df)
+    print("Loading Billboard data...")
+    billboard_df = fetch_billboard_data_bulk("2022-01-01", "2025-01-01")
+    billboard_df.to_csv("data/raw/billboard_hot_100_2022_2025.csv", index=False)
 
-    spotify_df.to_csv("data/raw/spotify_recently_played.csv", index=False)
+    print("Fetching Spotify data for Billboard songs...")
+    spotify_df = fetch_spotify_data_from_billboard(billboard_df)
+    spotify_df.to_csv("data/raw/spotify_enriched_from_billboard.csv", index=False)
 
-    # Fetch Billboard data
-    # Billboard Collection (2024 full year)
-    print("\nFetching Billboard data...")
-    billboard_df = fetch_billboard_data_bulk("2024-01-06", "2024-12-28")  # Saturdays only
-    if not billboard_df.empty:
-        billboard_df.to_csv("data/raw/billboard_hot_100_2024.csv", index=False)
-        print(f"Saved {len(billboard_df)} Billboard chart entries")
-    else:
-        print("No Billboard data collected")
+    print(f"Saved Spotify metadata for {len(spotify_df)} tracks.")

@@ -95,6 +95,7 @@ Random Forest performed best with good error reduction and ability to model non-
 - Longer tracks (~2–4 minutes) cluster near peak popularity
 
 **Analyzing Audio Features**
+
 Random Forest Classifier: used to determine importance of each feature (tempo, energy, etc.)
 
 Principal Component Analysis and Random Forest Regressor: trained on audio features to attempt to model chart prevalence/longevity

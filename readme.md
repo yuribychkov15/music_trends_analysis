@@ -1,23 +1,30 @@
 **Midterm Report Video Link:** https://youtu.be/NjSm3KxVdu0
+# Music Trends Analysis: Predicting Popularity from Billboard Charts and Genre Attributes
 
-# How to Run:
-## Clone the repository ##
+## How to Build and Run the Code
+### Setup Instructions
 
-[https://github.com/yuribychkov15/cs506#]
+1. Clone the repository:
+git clone <your-repo-url>
+cd music_trends_analysis
 
-## Create and activate virtual enviornment ##
-
+2. Set up the virtual environment:
 python3 -m venv venv
+source venv/bin/activate
 
-source venv/bin/activate 
+3. Install dependencies:
+make setup
 
-## Install dependencies ##
+### Run Full Pipeline
+make all
 
-pip install -r requirements.txt
+This includes data collection, preprocessing, model training, visualizations, and test runs.
+### Run Individually
+- Run pipeline + model: make run-model
+- Run only visualizations: make run-viz
+- Run tests: make test
+- Clean all output: make clean
 
-## To Deactivate Virtual Enviornment ##
-
-deactivate
 
 # Project Proposal
 
@@ -25,88 +32,87 @@ deactivate
 ### Description:
 Analyze the evolution of music trends by collecting data from Spotify and Billboard. The project will explore how factors like artist popularity, genre shifts, and streaming numbers change over time.
 
-### Goal(s):
-
+## Project Overview
+This project explores the relationship between Billboard chart success and Spotify popularity. The pipeline:
+- Collects and cleans music data from both Billboard and Spotify
+- Merges datasets into a unified, feature-rich CSV
+- Trains regression models to predict streaming popularity
+- Outputs visualizations to interpret feature relationships and trends
+  
 **Primary Goal:** Predict future music popularity trends (e.g., streaming counts or chart positions for artists/tracks).
 
-**Secondary Goal:** Identify emerging genres or artists based on historical data trends.
+**Our hypothesis:** Songs that rank high or last long on Billboard charts also tend to have higher Spotify popularity, but other factors like release timing and duration also matter.
 
-### Data Collection:
+## Data Collection and Processing
+### Sources:
 
-**What Data:** Artist names, track titles, genres, streaming counts, chart positions, release dates, etc.
+- Spotify API (via Spotipy): Tracks, durations, popularity scores, and release dates
 
-**How to Collect:**
-Use the Spotify API (via libraries like Spotipy) to fetch current and historical streaming data.
-Scrape Billboard charts using Python libraries such as requests and BeautifulSoup to extract chart positions and other metadata.
+- Billboard Hot 100 (GitHub JSON archive): Weekly chart positions and longevity
 
-### Data Modeling Approaches:
+- Billboard Hot weekly charts dataset from data.world: Billboard and Spotify data from 1958-present (https://data.world/kcmillersean/billboard-hot-100-1958-2017)
 
-**Time Series Forecasting:** Apply ARIMA or Facebook Prophet to predict future streaming numbers or chart positions.
-**Regression Models:** Use linear or non-linear regression to relate features (e.g., social media mentions, historical performance) with future popularity.
+### Processing Details
+**Billboard JSON Archive:**
+- Cleaned artist and title columns for merging
+- Filled missing or year-only dates with full YYYY-01-01
+- Created new features:
+  - days_since_release and log_days_since_release
+  - success_tier: Top Hit (1-10), Moderate (11-50), Niche (51-100)
+**Data.world dataset:**
+- merged multiple chart entries into one containing most relevant features
+- merged Billboard dataset with audio feature dataset
+- created new features:
+  - 4 classes based on peak chart position
+  - 9 broad genre categories extrapolated from existing data
 
-### Data Visualization Techniques:
+## Modeling
+We trained three models to predict popularity:
+**Features Used:**
+- duration_ms
 
-**Line Plots:** To display trends in streaming counts and chart positions over time.
+- peak_position
 
-**Scatter Plots:** To compare relationships between different features (e.g., genre vs. streaming numbers).
+- weeks_on_chart
 
-**Interactive Dashboards:** Use tools like Plotly or Dash for dynamic exploration of trends.
+- days_since_release
 
-### Test Plan:
+**Models & Metrics**
+Model                     RMSE           MAE
+Linear Regression        12.44           9.67
+Random Forest Regressor  12.06           9.08
+HistGradientBoosting     12.21           9.08
 
-**Approach:**
-Temporally split the data (e.g., train on data until a certain month and test on data from the subsequent month).
-Reserve the last 20% of the time-series data as a holdout test set.
-Evaluate performance using error metrics such as RMSE (Root Mean Squared Error) and MAE (Mean Absolute Error).
+Random Forest performed best with good error reduction and ability to model non-linear interactions.
+**Key Takeaways**
+- Billboard rank and peak position strongly inform popularity
 
-# Midterm Report
+- Newer tracks (lower days_since_release) often rank higher
 
-## Data Collection
+- Longer tracks (~2–4 minutes) cluster near peak popularity
 
-  - **Spotipy (Spotify API):** extracted track details including artist names, track titles, release dates, popularity scores, and duration metrics
-  - **Billboard API:** collected Hot 100 chart data featuring ranking information, artist names, song titles, and chart performance metrics like peak position and number of weeks on chart 
+**Analyzing Audio Features**
+Random Forest Classifier: used to determine importance of each feature (tempo, energy, etc.)
 
-## Data Processing
-  **Step-by-step breakdown:**
-  - Converting date fields to proper date/time format
-  - Extracting temporal features (year and month)
-  - Handling missing values in the weeks_on_chart column
-  - Removing duplicate entries based on title and artist combinations
-  - Merging Spotify and Billboard datasets using artist names as the joining field
+Principal Component Analysis and Random Forest Regressor: trained on audio features to attempt to model chart prevalence/longevity
 
-## Model Selection and Training
-  **Goal:** Predict song popularity based on various features extracted from APIs
-  Models used:
+Autoregressive Integrated Moving Average (ARIMA): Trained on recent genre data and chart prevalence of genres to predict future trends
   
-  **1. Linear Regression:** A baseline approach establishing fundamental relationships between features and popularity
+##  Visualization
+ insert images
   
-  - Benefits: computationally efficient, interpretable results show clear correlation if such a relationship exists
-    
-  **2. Random Forest Regressor:** A more complex ensemble method to capture non-linear patterns
-  
-  -  Benefits: able to handle nonlinearity, mitigates overfitting, less sensitive to outliers/noise
+## Testing and Automation
+### Pipeline Testing
+test_pipeline.py checks:
 
-![image](https://github.com/user-attachments/assets/282ea1df-6671-48f5-9ded-79ffd5d27e6b)
-- Actual probability vs. predicted probability using random forests
-  
-![image](https://github.com/user-attachments/assets/b4f9905f-1535-4ad4-a193-abcd9af888d2)
-- Demonstrates which extracted features were most important in predicting a song's popularity in order of most to least important
+- That Spotify and Billboard data are successfully processed
 
-  
-## Preliminary Results and Visualization
-![image](https://github.com/user-attachments/assets/d8c8fe7d-90c0-4bcb-aa46-a848fe025978)
-- Shows relationship between popularity over time and release dates
+- That merged dataset is not empty
 
-![image](https://github.com/user-attachments/assets/14be84aa-9e54-4e30-aa6a-e566f4c8538b)
-- Top 10 current artists on Spotify and their average popularity
+- That models train and achieve RMSE < 20
 
-## Challenges and Future Plans
-**Challenges**
-- Aligning track titles between Spotify and Billboard when merging data due to naming conventions, addressed by standardizing the formatting in preprocessing
-- Many older Billboard charts have missing information for some records, we can remedy this by filtering out these entries or reducing data to only include entries past a certain date where it can be verified that all records are complete
-
-**Future Plans**
-- Refining our models with additional algorithms, like ARIMA for time-series forecasting or neural networks for modeling more complex patterns
-- Incorporate other metrics of popularity like social media mentions or playlist inclusions
-- Analyze more audio features beyond track statistics such as genre, BPM, and valence
-- Create interactive dashboards using tools like Plotly or Dash for accessibility
+**Makefile**
+Automates the full flow:
+make all     # end-to-end pipeline
+make test    # run tests
+make clean   # cleanup

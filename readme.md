@@ -25,9 +25,6 @@ This includes data collection, preprocessing, model training, visualizations, an
 - Run tests: make test
 - Clean all output: make clean
 
-
-# Project Proposal
-
 ## Music Consumption Trends Analysis
 ### Description:
 Analyze the evolution of music trends by collecting data from Spotify and Billboard. The project will explore how factors like artist popularity, genre shifts, and streaming numbers change over time.

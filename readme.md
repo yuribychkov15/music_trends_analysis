@@ -77,6 +77,7 @@ We trained three models to predict popularity:
 - days_since_release
 
 **Models & Metrics**
+
 Model                     RMSE           MAE
 
 Linear Regression        12.44           9.67

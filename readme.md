@@ -78,8 +78,11 @@ We trained three models to predict popularity:
 
 **Models & Metrics**
 Model                     RMSE           MAE
+
 Linear Regression        12.44           9.67
+
 Random Forest Regressor  12.06           9.08
+
 HistGradientBoosting     12.21           9.08
 
 Random Forest performed best with good error reduction and ability to model non-linear interactions.

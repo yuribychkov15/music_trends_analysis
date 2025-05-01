@@ -102,8 +102,28 @@ Principal Component Analysis and Random Forest Regressor: trained on audio featu
 Autoregressive Integrated Moving Average (ARIMA): Trained on recent genre data and chart prevalence of genres to predict future trends
   
 ##  Visualization
- insert images
-  
+ ![image](https://github.com/user-attachments/assets/a3469970-2a16-4224-b2a0-d1172cb0cc04)
+
+ Analysis of audio features most important to chart popularity via Random Forest Classifier
+
+ ![image](https://github.com/user-attachments/assets/f00dd0e8-ca69-4e02-affd-d4e8e9be64e7)
+ All genre popularity based on chart prevalence over full timespan
+
+![image](https://github.com/user-attachments/assets/6e1669c5-9188-4e30-a704-823709f4af98)
+Popularity of all genres based on chart prevalence, 2010-2024
+
+![image](https://github.com/user-attachments/assets/bb093bcf-1be7-49ac-bb0d-572af684e95c)
+ARIMA forecasted share of pop songs on Billboard Hot 100 chart in the next 10 years
+
+![image](https://github.com/user-attachments/assets/17f22ef7-9a7c-442b-9fc5-d5df80ce7ad9)
+ARIMA forecasted share of rap songs on Billboard Hot 100 chart in the next 10 years
+
+![image](https://github.com/user-attachments/assets/75a3dd05-5771-4baf-a242-981ecf221a1c)
+ARIMA forecasted share of rap songs on Billboard Hot 100 chart in the next 10 years
+
+![image](https://github.com/user-attachments/assets/d64cda1f-ee93-496c-85ea-d3a086745ccc)
+Plotly graph with ARIMA forecasted shares of all genres
+
 ## Testing and Automation
 ### Pipeline Testing
 test_pipeline.py checks:

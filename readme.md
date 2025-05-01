@@ -19,6 +19,7 @@ make setup
 make all
 
 This includes data collection, preprocessing, model training, visualizations, and test runs.
+
 ### Run Individually
 - Run pipeline + model: make run-model
 - Run only visualizations: make run-viz
@@ -56,6 +57,7 @@ This project explores the relationship between Billboard chart success and Spoti
 - Created new features:
   - days_since_release and log_days_since_release
   - success_tier: Top Hit (1-10), Moderate (11-50), Niche (51-100)
+  - 
 **Data.world dataset:**
 - merged multiple chart entries into one containing most relevant features
 - merged Billboard dataset with audio feature dataset

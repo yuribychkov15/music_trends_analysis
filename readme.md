@@ -1,4 +1,4 @@
-**Midterm Report Video Link:** https://www.youtube.com/watch?v=s9nehaf4iQk&ab_channel=YuriBychkov
+**Final Report Video Link:** https://www.youtube.com/watch?v=s9nehaf4iQk&ab_channel=YuriBychkov
 # Music Trends Analysis: Predicting Popularity from Billboard Charts and Genre Attributes
 
 ## How to Build and Run the Code

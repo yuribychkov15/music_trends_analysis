@@ -55,9 +55,9 @@ This project explores the relationship between Billboard chart success and Spoti
 - Cleaned artist and title columns for merging
 - Filled missing or year-only dates with full YYYY-01-01
 - Created new features:
-  - days_since_release and log_days_since_release
+  - days_since_release
   - success_tier: Top Hit (1-10), Moderate (11-50), Niche (51-100)
-  - 
+  
 **Data.world dataset:**
 - merged multiple chart entries into one containing most relevant features
 - merged Billboard dataset with audio feature dataset
@@ -124,6 +124,30 @@ ARIMA forecasted share of rap songs on Billboard Hot 100 chart in the next 10 ye
 
 ![image](https://github.com/user-attachments/assets/d64cda1f-ee93-496c-85ea-d3a086745ccc)
 Plotly graph with ARIMA forecasted shares of all genres
+
+![image](https://raw.githubusercontent.com/yuribychkov15/music_trends_analysis/refs/heads/main/visualizations/hist_popularity.png)
+Popularity scores are roughly normal with a peak around 70
+
+![image](https://raw.githubusercontent.com/yuribychkov15/music_trends_analysis/refs/heads/main/visualizations/hist_duration_ms.png)
+Most songs are 3-4 minutes long, bell-shaped distribution
+
+![image](https://raw.githubusercontent.com/yuribychkov15/music_trends_analysis/refs/heads/main/visualizations/hist_days_since_release.png)
+Right-skewed. Most songs are new, with a few classics appearing decades later
+
+![image](https://raw.githubusercontent.com/yuribychkov15/music_trends_analysis/refs/heads/main/visualizations/scatter_success_tier.png)
+Highlights how Top Hits cluster in early days after release and generally earn higher popularity
+
+![image](https://raw.githubusercontent.com/yuribychkov15/music_trends_analysis/refs/heads/main/visualizations/top_artists.png)
+These are the top 10 artists by average popularity. You'll notice
+
+![image](https://raw.githubusercontent.com/yuribychkov15/music_trends_analysis/refs/heads/main/visualizations/genre_trends_over_time.png)
+External dataset of Spotify Top 100 tracks from 2010-2019
+
+![image](https://raw.githubusercontent.com/yuribychkov15/music_trends_analysis/refs/heads/main/visualizations/popularity_trend.png)
+Quarterly average popularity over time 
+
+![image](https://raw.githubusercontent.com/yuribychkov15/music_trends_analysis/refs/heads/main/visualizations/popularity_prediction.png)
+Poplarity Prediction
 
 ## Testing and Automation
 ### Pipeline Testing
